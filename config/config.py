@@ -5,7 +5,14 @@ logger = setup_logger()
 
 # Подключение к базе данных
 def connect_db():
-    return sqlite3.connect("identifier.sqlite")
+    try:
+        connection = sqlite3.connect("identifier.sqlite")
+        if connection is None:
+            raise Exception("Не удалось подключиться к базе данных")
+        return connection
+    except Exception as e:
+        logger.error(f"Ошибка подключения к базе данных: {e}")
+        return None
 
 # Создание необходимых таблиц
 def create_tables():

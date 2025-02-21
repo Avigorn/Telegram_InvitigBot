@@ -33,7 +33,7 @@ except Exception as e:
 
 # Инициализация клиента Pyrogram
 app = Client(
-    "@Main_Sharyinets_bot",
+    "Inviting_Event_bot",
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=TELEGRAM_BOT_TOKEN,
@@ -52,24 +52,28 @@ MessageHandler(app)
 
 async def main():
     logger.info("Запуск приложения")
-    if INVITING_CHAT_ID:
-        try:
-            await add_existing_users_to_db(app, INVITING_CHAT_ID)
-        except Exception as e:
-            logger.error(f"Ошибка добавления пользователей из чата INVITING_CHAT: {e}")
-    if INVITED_CHAT_ID:
-        try:
-            await add_existing_users_to_db(app, INVITED_CHAT_ID)
-        except Exception as e:
-            logger.error(f"Ошибка добавления пользователей из чата INVITED_CHAT: {e}")
 
-    async with app:
-        await app.start()
-        logger.info("Бот успешно запущен")
-        await app.stop()
+    try:
+        async with app:
+            # Добавление существующих пользователей из чатов в базу данных
+            if INVITING_CHAT_ID:
+                try:
+                    await add_existing_users_to_db(app, INVITING_CHAT_ID)
+                except Exception as e:
+                    logger.error(f"Ошибка добавления пользователей из чата INVITING_CHAT: {e}", exc_info=True)
+
+            if INVITED_CHAT_ID:
+                try:
+                    await add_existing_users_to_db(app, INVITED_CHAT_ID)
+                except Exception as e:
+                    logger.error(f"Ошибка добавления пользователей из чата INVITED_CHAT: {e}", exc_info=True)
+
+            # Бесконечный цикл работы бота
+    except Exception as e:
+        logger.critical(f"Ошибка при работе бота: {e}", exc_info=True)
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except Exception as e:
-        logger.critical(f"Критическая ошибка в основном потоке: {e}")
+        logger.critical(f"Критическая ошибка в основном потоке: {e}", exc_info=True)
