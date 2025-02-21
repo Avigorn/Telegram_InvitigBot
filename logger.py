@@ -10,10 +10,16 @@ def setup_logger():
 
     # Создание временной директории, если её нет
     temp_dir = tempfile.gettempdir()  # Получаем путь к временной директории <button class="citation-flag" data-index="10">
-    log_file_path = os.path.join(temp_dir, 'app.log')  # Путь к файлу логов
+    log_file_path = os.path.join(temp_dir, 'app.log', )  # Путь к файлу логов
 
     # Обработчик для записи в файл
-    file_handler = RotatingFileHandler(log_file_path, maxBytes=1024 * 1024 * 5, backupCount=3)
+    # Обработчик для записи в файл с кодировкой UTF-8
+    file_handler = RotatingFileHandler(
+        'app.log',
+        maxBytes=1024 * 1024 * 5,  # 5 MB
+        backupCount=3,
+        encoding='utf-8'  # Кодировка для поддержки русского языка
+    )
     file_handler.setLevel(logging.DEBUG)  # Все уровни в файл
 
     # Обработчик для вывода в консоль
