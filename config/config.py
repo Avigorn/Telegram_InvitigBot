@@ -1,6 +1,4 @@
-import logging
 import sqlite3
-from pyrogram.types import ChatMember
 from logger import setup_logger
 
 logger = setup_logger()
@@ -163,7 +161,6 @@ def update_chat_data(inviting_chat_id, invited_chat_id):
 # Добавление существующих пользователей из чата в базу данных
 async def add_existing_users_to_db(app, chat_id):
     connection = connect_db()
-    cursor = connection.cursor()
 
     try:
         members = []
